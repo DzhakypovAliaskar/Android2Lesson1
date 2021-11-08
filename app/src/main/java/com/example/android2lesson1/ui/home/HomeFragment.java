@@ -1,47 +1,64 @@
 package com.example.android2lesson1.ui.home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.android2lesson1.R;
 import com.example.android2lesson1.databinding.FragmentHomeBinding;
+import com.example.android2lesson1.ui.create.TaskAdapter;
+import com.example.android2lesson1.ui.create.TaskModel;
 import com.example.android2lesson1.utils.Constants;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-    private String task;
+    private HomeViewModel homeViewModel;
+    TaskModel model;
+    ArrayList<TaskModel> list = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        homeViewModel =
+                new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
 
-        getParentFragmentManager().setFragmentResultListener(Constants.REQUEST_TASK, getViewLifecycleOwner(), (new FragmentResultListener() {
+        if (getArguments() != null){
+            model = (TaskModel) getArguments().getSerializable(Constants.USER_TASK);
+            list.add(model);
+        }
+        binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                task = result.getString(Constants.USER_TASK);
-                Log.e("TAG", "onViewCreated: " + task);
+            public void onClick(View view) {
+                navController.navigate(R.id.createFragment);
             }
-        }));
+        });
+
+        initAdapter();
+    }
+
+    private void initAdapter() {
+        TaskAdapter adapter = new TaskAdapter(list);
+        binding.taskRecycler.setAdapter(adapter);
     }
 
     @Override
