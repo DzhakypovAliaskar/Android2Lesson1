@@ -33,4 +33,3 @@ public class BoardAdapter extends FragmentPagerAdapter {
         return 3;
     }
 }
-

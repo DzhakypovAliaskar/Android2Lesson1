@@ -26,11 +26,6 @@ public class BoardActivity extends AppCompatActivity {
         initViewPager();
      }
 
-    private void initViewPager() {
-        binding.viewPagerBoard.setAdapter(new BoardAdapter(getSupportFragmentManager()));
-        binding.wormDotsIndicator.setViewPager(binding.viewPagerBoard);
-    }
-
     private void checkShow() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.IS_SHOW_FILE,MODE_PRIVATE);
         isShow = sharedPreferences.getBoolean(Constants.IS_SHOW,false);
@@ -38,4 +33,10 @@ public class BoardActivity extends AppCompatActivity {
             startActivity(new Intent(this, MainActivity.class));
         }
     }
+
+    private void initViewPager() {
+        binding.viewPagerBoard.setAdapter(new BoardAdapter(getSupportFragmentManager()));
+        binding.wormDotsIndicator.setViewPager(binding.viewPagerBoard);
+    }
+
 }

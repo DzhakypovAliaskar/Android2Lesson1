@@ -17,17 +17,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <ImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/board_image"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginTop="15dp"
-        android:src="@mipmap/ic_launcher"
+        android:layout_marginTop="16dp"
+        app:lottie_fileName="tasks.json"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/skip_btn"/>
+        app:layout_constraintTop_toBottomOf="@id/skip_btn" />
 
-    <ImageView
+    <TextView
         android:id="@+id/title_tv"
         android:layout_marginTop="15dp"
         android:text="some title about app"

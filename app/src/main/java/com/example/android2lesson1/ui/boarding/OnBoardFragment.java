@@ -12,8 +12,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.example.android2lesson1.MainActivity;
+import com.example.android2lesson1.R;
 import com.example.android2lesson1.databinding.FragmentOnBoardBinding;
 import com.example.android2lesson1.utils.Constants;
 
@@ -40,13 +43,22 @@ public class OnBoardFragment extends Fragment {
             int position = getArguments().getInt(Constants.FRAGMENT_POSITION);
             switch (position){
                 case 0:
-                    binding.titleTv.setTextAlignment(Integer.parseInt("Приветствую"));
+                    binding.titleTv.setText("Приветствую");
+                    binding.skipBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Animation logoMoveAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.bounse_animation);
+                            binding.skipBtn.startAnimation(logoMoveAnimation);
+                        }
+                    });
                     break;
                 case 1:
-                    binding.titleTv.setTextAlignment(Integer.parseInt("Второй экран"));
+                    binding.titleTv.setText("Второй экран");
+                    binding.boardImage.setAnimation("checked.json");
                     break;
                 case 2:
-                    binding.titleTv.setTextAlignment(Integer.parseInt("Третий экран"));
+                    binding.titleTv.setText("Третий экран");
+                    binding.boardImage.setAnimation("jumping.json");
                     binding.startBtn.setVisibility(View.VISIBLE);
                     binding.startBtn.setOnClickListener(new View.OnClickListener() {
                         @Override

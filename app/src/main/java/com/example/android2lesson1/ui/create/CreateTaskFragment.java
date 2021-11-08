@@ -28,12 +28,14 @@ import android.widget.TimePicker;
 import com.bumptech.glide.Glide;
 import com.example.android2lesson1.R;
 import com.example.android2lesson1.databinding.FragmentCreateTaskBinding;
+import com.example.android2lesson1.utils.App;
 import com.example.android2lesson1.utils.Constants;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
 public class CreateTaskFragment extends Fragment {
-
     private FragmentCreateTaskBinding binding;
     String userTask;
     String userChoosedDate;
@@ -49,25 +51,26 @@ public class CreateTaskFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         userTask = binding.taskEd.getText().toString();
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+
         binding.setTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDateTimePicker();
             }
         });
+
         binding.applyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 userTask = binding.taskEd.getText().toString();
                 TaskModel model = new TaskModel(R.color.purple_200,userTask,userChoosedDate + "/" + time,image);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(Constants.USER_TASK, model);
-                navController.navigate(R.id.nav_home, bundle);
+                App.getInstance().getDateBase().taskDao().insert(model);
+                navController.navigate(R.id.nav_home);
 
             }
         });
@@ -89,9 +92,9 @@ public class CreateTaskFragment extends Fragment {
             });
 
     public void showDateTimePicker() {
-        final java.util.Calendar currentDate = java.util.Calendar.getInstance();
+        final Calendar currentDate = Calendar.getInstance();
 
-        java.util.Calendar date = java.util.Calendar.getInstance();
+        Calendar date = Calendar.getInstance();
         new DatePickerDialog(requireContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -100,16 +103,16 @@ public class CreateTaskFragment extends Fragment {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        date.set(java.util.Calendar.HOUR_OF_DAY, hourOfDay);
-                        date.set(java.util.Calendar.MINUTE, minute);
+                        date.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        date.set(Calendar.MINUTE, minute);
                         time = hourOfDay + " : " + minute;
-                        userChoosedDate = date.get(java.util.Calendar.MONTH) + "." + date.get(java.util.Calendar.DAY_OF_MONTH);
+                        userChoosedDate = date.get(Calendar.MONTH) + "." + date.get(Calendar.DAY_OF_MONTH);
 
                         binding.timeTv.setText(userChoosedDate + "/" + time);
                     }
-                }, currentDate.get(java.util.Calendar.HOUR_OF_DAY), currentDate.get(java.util.Calendar.MINUTE), false).show();
+                }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), false).show();
             }
-        }, currentDate.get(java.util.Calendar.YEAR), currentDate.get(java.util.Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
+        }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
     }
 
     @Override
